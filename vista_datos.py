@@ -21,10 +21,15 @@ authenticator = stauth.Authenticate(
     config['cookie']['expiry_days']
 )
 
+# Inicializar variables de login con valores predeterminados
+name = None
+authentication_status = None
+username = None
+
 # Crear el widget de login con todos los parámetros opcionales configurados
 try:
     # Crear el widget de login con la ubicación 'main' y otros parámetros
-    name, authentication_status, username = authenticator.login(
+    login_result = authenticator.login(
         location='main',  # Ubicación del formulario (puede ser 'main', 'sidebar', 'unrendered')
         max_concurrent_users=None,  # Sin límite de usuarios concurrentes
         max_login_attempts=None,  # Sin límite de intentos fallidos
@@ -34,10 +39,18 @@ try:
         clear_on_submit=False,  # No limpiar los campos tras enviar
         key='login_widget'  # Clave única para el widget
     )
+
+    # Verificamos que el resultado de login no sea None
+    if login_result is None:
+        raise ValueError("El login no se ha completado correctamente")
+
+    # Desempaquetamos el resultado de login (Si la autenticación fue exitosa)
+    name, authentication_status, username = login_result
+
 except Exception as e:
     st.error(f"Error en el login: {e}")
 
-# Verificar si la autenticación fue exitosa
+# Si no está autenticado, mostramos un mensaje y detenemos la ejecución
 if authentication_status:
     authenticator.logout('Cerrar sesión', 'sidebar')
     st.sidebar.success(f'👋 Bienvenido, {name}')
