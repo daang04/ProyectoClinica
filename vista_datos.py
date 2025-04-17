@@ -1,45 +1,48 @@
-import yaml
 import streamlit as st
+import yaml
+from yaml.loader import SafeLoader
 import streamlit_authenticator as stauth
-from streamlit_option_menu import option_menu
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from base_datos import mostrar_base_datos
 from generar_qr import generar_qrs
+from streamlit_option_menu import option_menu
 
-# Cargar la configuración desde el archivo YAML
-with open("config.yaml", "r") as file:
-    config = yaml.safe_load(file)
+# Cargar el archivo YAML con la configuración de usuarios y cookies
+with open('config.yaml') as file:
+    config = yaml.load(file, Loader=SafeLoader)
 
-# Crear el objeto de autenticación con los usuarios de la configuración
+# Crear el objeto de autenticación
 authenticator = stauth.Authenticate(
-    config['credentials']['usernames'],  # Asegúrate de que 'usernames' esté presente
-    config['cookie']['name'],            # Nombre de la cookie
-    config['cookie']['key'],             # Clave para firmar las cookies
+    config['credentials'],  # Datos de los usuarios
+    config['cookie']['name'],  # Nombre de la cookie
+    config['cookie']['key'],   # Clave para firmar las cookies
     cookie_expiry_days=config['cookie']['expiry_days'],  # Expiración de cookies
 )
 
 # Realizamos el login
-nombre_usuario, autenticado, nombre_rol = authenticator.login(form_name="Iniciar sesión", location="main")
+name, authentication_status, username = authenticator.login('Login', 'main')
 
 # Si no está autenticado, mostramos un mensaje y detenemos la ejecución
-if not autenticado:
-    st.warning("Por favor, inicia sesión para continuar.")
+if not authentication_status:
+    if authentication_status == False:
+        st.error('Username/password is incorrect')  # Si las credenciales no son correctas
+    elif authentication_status == None:
+        st.warning('Please enter your username and password')  # Si no se ha intentado iniciar sesión
     st.stop()
 
-# Si está autenticado, obtenemos el nombre del usuario
-nombre_usuario = st.session_state["name"]
+# Si está autenticado, mostramos el menú lateral y los contenidos
+authenticator.logout('Logout', 'main')
+st.sidebar.success(f"👋 Bienvenido, {name}")
 
 # ---------- AUTENTICACIÓN GOOGLE SHEETS ----------
 info = st.secrets["google_service_account"]
-scope = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
+scope = ['https://www.googleapis.com/auth/spreadsheets',
+         'https://www.googleapis.com/auth/drive']
 credenciales = ServiceAccountCredentials.from_json_keyfile_dict(info, scope)
 cliente = gspread.authorize(credenciales)
 
 # ---------- MENÚ ----------
-authenticator.logout("Cerrar sesión", "sidebar")
-st.sidebar.success(f"👋 Bienvenido, {nombre_usuario} ({nombre_rol})")
-
 with st.sidebar:
     menu = option_menu(
         "Menú principal",
