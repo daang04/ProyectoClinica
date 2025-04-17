@@ -19,12 +19,13 @@ credentials = {
     }
 }
 
+# Inicializamos el autenticador
 authenticator = stauth.Authenticate(
     credentials,
     "mi_aplicacion", "clave_firma", cookie_expiry_days=1
 )
 
-# Realizamos el login
+# Realizamos el login (solo verificamos si el login es exitoso)
 autenticado = authenticator.login()
 
 # Si no está autenticado, mostramos un mensaje y detenemos la ejecución
