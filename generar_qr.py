@@ -18,7 +18,8 @@ cliente = gspread.authorize(credenciales)
 drive_service = build('drive', 'v3', credentials=credenciales)
 
 
-QR_FOLDER_ID = "1xTfp9wAmjHC0PQaMz8jN43Td5c5YnJQE"
+QR_FOLDER_ID = st.secrets["google_drive"]["qr_folder_id"]
+
 
 def generar_qrs():
     st.title("📲 Generador de Códigos QR")
