@@ -1,3 +1,9 @@
+api_key: null
+cookie:
+  expiry_days: 30
+  key: some_cookie_name  
+  name: some_cookie_name
+
 credentials:
   usernames:
     ingeniero:
@@ -13,7 +19,4 @@ credentials:
       password: "$2b$12$I8i8KVkIJ4O3ieRa5SscHOhUlKrvS9raNIKZL.sAeBxUnBKtaoWxa" 
       role: "Pasante"
 
-cookie:
-  expiry_days: 30
-  key: random_signature_key   
-  name: random_cookie_name  
+
