@@ -7,7 +7,7 @@ import streamlit_authenticator as stauth
 from base_datos import mostrar_base_datos
 from generar_qr import generar_qrs
 
-
+# ---------- LOGIN ----------
 nombres = st.secrets["auth"]["nombres"]
 usuarios = st.secrets["auth"]["usuarios"]
 contrasenas = st.secrets["auth"]["contrasenas"]
@@ -24,8 +24,8 @@ authenticator = stauth.Authenticate(
     "mi_aplicacion", "clave_firma", cookie_expiry_days=1
 )
 
-nombre_usuario, autenticado = authenticator.login("main")
-
+# ⛔ IMPORTANTE: usar .login() sin argumentos si tu versión es anterior
+nombre_usuario, autenticado = authenticator.login()
 
 if not autenticado:
     st.warning("Por favor, inicia sesión para continuar.")
