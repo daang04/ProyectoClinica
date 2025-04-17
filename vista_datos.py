@@ -25,8 +25,8 @@ authenticator = stauth.Authenticate(
     "mi_aplicacion", "clave_firma", cookie_expiry_days=1
 )
 
-# Realizamos el login (solo verificamos si el login es exitoso)
-autenticado = authenticator.login()
+# Realizamos el login y pasamos el nombre del formulario
+autenticado = authenticator.login(form_name="Iniciar sesión")
 
 # Si no está autenticado, mostramos un mensaje y detenemos la ejecución
 if not autenticado:
