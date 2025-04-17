@@ -1,0 +1,10 @@
+streamlit
+streamlit-option-menu
+gspread
+oauth2client
+openai
+google-api-python-client
+pandas
+numpy
+qrcode
+Pillow
