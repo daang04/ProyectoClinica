@@ -1,0 +1,19 @@
+credentials:
+  usernames:
+    ingeniero:
+      name: "Walter Rios"
+      password: "$2b$12$5RRb6GLewuUuhp2rSrU6uuM9qTPM2/zQ/HcxQhTvSgjJCT74HkOxu"  
+      role: "Ingeniero Clínico"
+    practicante:
+      name: "Practicante"
+      password: "$2b$12$OOqwOHmZ5qCkqAXDO1Ua6Ojooh0U/FskNE5C6c1AgkyheEn6CBFXO"  
+      role: "Practicante"
+    pasante:
+      name: "Pasante 1"
+      password: "$2b$12$I8i8KVkIJ4O3ieRa5SscHOhUlKrvS9raNIKZL.sAeBxUnBKtaoWxa" 
+      role: "Pasante"
+
+cookie:
+  expiry_days: 30
+  key: random_signature_key   
+  name: random_cookie_name  

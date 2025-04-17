@@ -1,57 +1,42 @@
 import streamlit as st
+import streamlit_authenticator as stauth
+import yaml
 from streamlit_option_menu import option_menu
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-import pandas as pd
-import streamlit_authenticator as stauth
 from base_datos import mostrar_base_datos
 from generar_qr import generar_qrs
 
-# ---------- Cargar credenciales desde secrets.toml ----------
-nombres = st.secrets["auth"]["nombres"]
-usuarios = st.secrets["auth"]["usuarios"]
-contrasenas = st.secrets["auth"]["contrasenas"]
+# Cargar configuración desde el archivo .yaml
+with open("config.yaml", "r") as file:
+    config = yaml.safe_load(file)
 
-# Configuración de autenticación: crear el diccionario de credenciales
-credentials = {
-    "usernames": {}
-}
-
-for i in range(len(usuarios)):
-    credentials["usernames"][usuarios[i]] = {
-        "name": nombres[i],
-        "password": contrasenas[i]
-    }
-
-# Inicializar el autenticador
+# Crear el objeto de autenticación
 authenticator = stauth.Authenticate(
-    credentials,
-    "mi_aplicacion",  # Nombre de la aplicación
-    "clave_firma",    # Clave para firmar las cookies
-    cookie_expiry_days=1  # Expiración de cookies (en días)
+    config['credentials']['usernames'],
+    config['cookie']['name'],
+    config['cookie']['key'],
+    config['cookie']['expiry_days'],
+    config['preauthorized']
 )
 
-# ---------- Realizar el login ----------
-autenticado = authenticator.login(form_name="Iniciar sesión", location="main")
+# Realizar el login
+nombre_usuario, autenticado, nombre_rol = authenticator.login("Iniciar sesión", "main")
 
-# Si no está autenticado, mostramos un mensaje y detenemos la ejecución
 if not autenticado:
     st.warning("Por favor, inicia sesión para continuar.")
     st.stop()
 
-# Si está autenticado, obtenemos el nombre del usuario
-nombre_usuario = st.session_state["name"]
+# Si está autenticado, mostrar el nombre del usuario
+st.sidebar.success(f"👋 Bienvenido, {nombre_usuario} ({nombre_rol})")
 
-# ---------- AUTENTICACIÓN GOOGLE SHEETS ----------
+# Configuración de Google Sheets
 info = st.secrets["google_service_account"]
 scope = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
 credenciales = ServiceAccountCredentials.from_json_keyfile_dict(info, scope)
 cliente = gspread.authorize(credenciales)
 
-# ---------- MENÚ ----------
-authenticator.logout("Cerrar sesión", "sidebar")
-st.sidebar.success(f"👋 Bienvenido, {nombre_usuario}")
-
+# Menú lateral
 with st.sidebar:
     menu = option_menu(
         "Menú principal",
