@@ -8,4 +8,4 @@ pandas
 numpy
 qrcode
 Pillow
-streamlit_authenticator
+streamlit-authenticator==0.2.3
