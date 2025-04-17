@@ -24,7 +24,8 @@ authenticator = stauth.Authenticate(
     "mi_aplicacion", "clave_firma", cookie_expiry_days=1
 )
 
-nombre_usuario, autenticado = authenticator.login("Iniciar sesión", "main")
+nombre_usuario, autenticado = authenticator.login("main")
+
 
 if not autenticado:
     st.warning("Por favor, inicia sesión para continuar.")
