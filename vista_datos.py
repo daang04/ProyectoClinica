@@ -23,9 +23,7 @@ authenticator = stauth.Authenticate(
 )
 
 # Inicializar variables con valores predeterminados
-name = None
-authentication_status = None
-username = None
+
 
 # Crear el widget de login con todos los parámetros opcionales configurados
 try:
