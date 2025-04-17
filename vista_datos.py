@@ -27,11 +27,12 @@ authenticator = stauth.Authenticate(
 # Realizamos el login
 autenticado = authenticator.login()
 
+# Si no está autenticado, mostramos un mensaje y detenemos la ejecución
 if not autenticado:
     st.warning("Por favor, inicia sesión para continuar.")
     st.stop()
 
-# Si la autenticación fue exitosa, obtenemos el nombre del usuario
+# Si está autenticado, obtenemos el nombre del usuario
 nombre_usuario = authenticator.get_username()
 
 # ---------- AUTENTICACIÓN GOOGLE SHEETS ----------
