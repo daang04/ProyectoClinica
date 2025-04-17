@@ -2,6 +2,7 @@ import yaml
 import streamlit as st
 from yaml.loader import SafeLoader
 import streamlit_authenticator as stauth
+from streamlit_authenticator.utilities import *
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
@@ -21,7 +22,7 @@ authenticator = stauth.Authenticate(
     config['cookie']['expiry_days']
 )
 
-# Inicializar variables de login con valores predeterminados
+# Inicializar variables con valores predeterminados
 name = None
 authentication_status = None
 username = None
