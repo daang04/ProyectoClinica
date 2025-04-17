@@ -8,9 +8,11 @@ from oauth2client.service_account import ServiceAccountCredentials
 import gspread
 
 # Usa tus credenciales existentes
+info = st.secrets["google_service_account"]
 scope = ['https://www.googleapis.com/auth/spreadsheets',
          'https://www.googleapis.com/auth/drive']
-credenciales = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
+credenciales = ServiceAccountCredentials.from_json_keyfile_dict(info, scope)
+cliente = gspread.authorize(credenciales)
 
 # Cliente de Drive
 drive_service = build('drive', 'v3', credentials=credenciales)
