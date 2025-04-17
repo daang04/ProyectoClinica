@@ -33,8 +33,8 @@ if not autenticado:
     st.warning("Por favor, inicia sesión para continuar.")
     st.stop()
 
-# Si está autenticado, obtenemos el nombre del usuario correctamente
-nombre_usuario = authenticator.current_user["name"]
+# Si está autenticado, obtenemos el nombre del usuario desde el diccionario de autenticación
+nombre_usuario = authenticator.username  # Usamos esta línea para obtener el nombre del usuario
 
 # ---------- AUTENTICACIÓN GOOGLE SHEETS ----------
 info = st.secrets["google_service_account"]
