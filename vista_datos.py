@@ -7,42 +7,44 @@ import streamlit_authenticator as stauth
 from base_datos import mostrar_base_datos
 from generar_qr import generar_qrs
 
-# ---------- LOGIN ----------
+# ---------- Cargar credenciales desde secrets.toml ----------
 nombres = st.secrets["auth"]["nombres"]
 usuarios = st.secrets["auth"]["usuarios"]
 contrasenas = st.secrets["auth"]["contrasenas"]
 
-# Aseguramos que cada 'user' tiene asociado un 'name' y 'password' correctamente
+# Configuración de autenticación: crear el diccionario de credenciales
 credentials = {
-    "usernames": {
-        usuarios[i]: {
-            "name": nombres[i],   # Asegúrate de que el 'name' esté aquí correctamente
-            "password": contrasenas[i]
-        }
-        for i in range(len(usuarios))
-    }
+    "usernames": {}
 }
 
+for i in range(len(usuarios)):
+    credentials["usernames"][usuarios[i]] = {
+        "name": nombres[i],
+        "password": contrasenas[i]
+    }
+
+# Inicializar el autenticador
 authenticator = stauth.Authenticate(
     credentials,
-    "mi_aplicacion", "clave_firma", cookie_expiry_days=1
+    "mi_aplicacion",  # Nombre de la aplicación
+    "clave_firma",    # Clave para firmar las cookies
+    cookie_expiry_days=1  # Expiración de cookies (en días)
 )
 
-# Realizamos el login y pasamos el nombre del formulario
-autenticado = authenticator.login(form_name="Iniciar sesión")
+# ---------- Realizar el login ----------
+autenticado = authenticator.login(form_name="Iniciar sesión", location="main")
 
 # Si no está autenticado, mostramos un mensaje y detenemos la ejecución
 if not autenticado:
     st.warning("Por favor, inicia sesión para continuar.")
     st.stop()
 
-# Si está autenticado, obtenemos el nombre del usuario desde el diccionario de autenticación
-nombre_usuario = st.session_state.get("name", "Invitado")  # Usamos `session_state` para obtener el nombre del usuario
+# Si está autenticado, obtenemos el nombre del usuario
+nombre_usuario = st.session_state["name"]
 
 # ---------- AUTENTICACIÓN GOOGLE SHEETS ----------
 info = st.secrets["google_service_account"]
-scope = ['https://www.googleapis.com/auth/spreadsheets',
-         'https://www.googleapis.com/auth/drive']
+scope = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
 credenciales = ServiceAccountCredentials.from_json_keyfile_dict(info, scope)
 cliente = gspread.authorize(credenciales)
 
