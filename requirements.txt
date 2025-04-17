@@ -1,7 +1,8 @@
 streamlit
 streamlit-option-menu
 gspread
-oauth2client
+google-auth
+google-auth-oauthlib
 openai
 google-api-python-client
 pandas
@@ -9,4 +10,4 @@ numpy
 qrcode
 Pillow
 streamlit-authenticator
-yaml
+pyyaml
