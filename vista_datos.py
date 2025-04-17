@@ -24,12 +24,15 @@ authenticator = stauth.Authenticate(
     "mi_aplicacion", "clave_firma", cookie_expiry_days=1
 )
 
-# ⛔ IMPORTANTE: usar .login() sin argumentos si tu versión es anterior
-nombre_usuario, autenticado = authenticator.login()
+# Realizamos el login
+autenticado = authenticator.login()
 
 if not autenticado:
     st.warning("Por favor, inicia sesión para continuar.")
     st.stop()
+
+# Si la autenticación fue exitosa, obtenemos el nombre del usuario
+nombre_usuario = authenticator.get_username()
 
 # ---------- AUTENTICACIÓN GOOGLE SHEETS ----------
 info = st.secrets["google_service_account"]
