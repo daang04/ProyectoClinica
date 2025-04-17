@@ -23,36 +23,17 @@ authenticator = stauth.Authenticate(
 )
 
 # Inicializar variables con valores predeterminados
+name, authentication_status, username = authenticator.login('Login', 'main')
 
-
-# Crear el widget de login con todos los parámetros opcionales configurados
-try:
-    # Crear el widget de login con la ubicación 'main' y otros parámetros
-    login_result = authenticator.login(
-        location='main',  # Ubicación del formulario (puede ser 'main', 'sidebar', 'unrendered')
-        max_concurrent_users=None,  # Sin límite de usuarios concurrentes
-        max_login_attempts=None,  # Sin límite de intentos fallidos
-        fields={'Username': 'Usuario', 'Password': 'Contraseña', 'Login': 'Iniciar sesión'},  # Personalización de los campos
-        captcha=False,  # No usar captcha
-        single_session=False,  # Permitimos múltiples sesiones
-        clear_on_submit=False,  # No limpiar los campos tras enviar
-        key='login_widget'  # Clave única para el widget
-    )
-
-    # Verificamos que el resultado de login no sea None
-    if login_result is None:
-        raise ValueError("El login no se ha completado correctamente")
-
-    # Desempaquetamos el resultado de login (Si la autenticación fue exitosa)
-    name, authentication_status, username = login_result
-
-except Exception as e:
-    st.error(f"Error en el login: {e}")
-
-# Si no está autenticado, mostramos un mensaje y detenemos la ejecución
 if authentication_status:
-    authenticator.logout('Cerrar sesión', 'sidebar')
-    st.sidebar.success(f'👋 Bienvenido, {name}')
+    authenticator.logout('Logout', 'main')
+    st.write(f'Welcome *{name}*')
+    st.title('Some content')
+elif authentication_status == False:
+    st.error('Username/password is incorrect')
+elif authentication_status == None:
+    st.warning('Please enter your username and password')
+
     
     # ---------- AUTENTICACIÓN GOOGLE SHEETS ----------
     info = st.secrets["google_service_account"]
