@@ -8,9 +8,9 @@ from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 from base_datos import mostrar_base_datos
 from generar_qr import generar_qrs
-from streamlit_option_menu import option_menu  # Esta es la librería faltante
+from streamlit_option_menu import option_menu  # Librería para el menú lateral
 
-# Cargar el archivo de configuración
+# Cargar archivo de configuración
 with open('config.yaml', 'r', encoding='utf-8') as file:
     config = yaml.load(file, Loader=SafeLoader)
 
@@ -22,7 +22,7 @@ authenticator = stauth.Authenticate(
     config['cookie']['expiry_days']
 )
 
-# Crear el widget de login en el área principal
+# Crear widget de login
 name, authentication_status, username = authenticator.login(form_name='Iniciar sesión', location='main')
 
 # Si no está autenticado, mostramos un mensaje y detenemos la ejecución
@@ -42,7 +42,7 @@ scope = ['https://www.googleapis.com/auth/spreadsheets',
 credenciales = ServiceAccountCredentials.from_json_keyfile_dict(info, scope)
 cliente = gspread.authorize(credenciales)
 
-# ---------- MENÚ ----------
+# ---------- MENÚ LATERAL ----------
 with st.sidebar:
     menu = option_menu(
         "Menú principal",
@@ -52,12 +52,16 @@ with st.sidebar:
         default_index=0
     )
 
+# Sección de inicio
 if menu == "Inicio":
     st.title("🏥 Bienvenido al Sistema de Inventario")
     st.write("Navega usando el menú lateral para ver y gestionar los equipos médicos.")
 
+# Sección de base de datos
 elif menu == "Ver Base de Datos":
     mostrar_base_datos()
 
+# Sección de generar QR
 elif menu == "Generar QR":
     generar_qrs()
+
