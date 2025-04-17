@@ -37,7 +37,7 @@ if not autenticado:
     st.stop()
 
 # Si está autenticado, obtenemos el nombre del usuario desde el diccionario de autenticación
-nombre_usuario = authenticator.username  # Usamos esta línea para obtener el nombre del usuario
+nombre_usuario = st.session_state.get("name", "Invitado")  # Usamos `session_state` para obtener el nombre del usuario
 
 # ---------- AUTENTICACIÓN GOOGLE SHEETS ----------
 info = st.secrets["google_service_account"]
