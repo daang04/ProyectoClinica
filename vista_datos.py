@@ -22,8 +22,11 @@ authenticator = stauth.Authenticate(
     config['cookie']['expiry_days']
 )
 
-# Crear widget de login
-name, authentication_status, username = authenticator.login(form_name='Iniciar sesión', location='main')
+# Crear el widget de login
+try:
+    name, authentication_status, username = authenticator.login()
+except LoginError as e:
+    st.error(e)
 
 # Si no está autenticado, mostramos un mensaje y detenemos la ejecución
 if not authentication_status:
@@ -64,4 +67,3 @@ elif menu == "Ver Base de Datos":
 # Sección de generar QR
 elif menu == "Generar QR":
     generar_qrs()
-
