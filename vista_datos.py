@@ -12,14 +12,17 @@ nombres = st.secrets["auth"]["nombres"]
 usuarios = st.secrets["auth"]["usuarios"]
 contrasenas = st.secrets["auth"]["contrasenas"]
 
+# Aseguramos que cada 'user' tiene asociado un 'name' y 'password' correctamente
 credentials = {
     "usernames": {
-        user: {"name": nombre, "password": hash_}
-        for user, nombre, hash_ in zip(usuarios, nombres, contrasenas)
+        usuarios[i]: {
+            "name": nombres[i],   # Asegúrate de que el 'name' esté aquí correctamente
+            "password": contrasenas[i]
+        }
+        for i in range(len(usuarios))
     }
 }
 
-# Inicializamos el autenticador
 authenticator = stauth.Authenticate(
     credentials,
     "mi_aplicacion", "clave_firma", cookie_expiry_days=1
